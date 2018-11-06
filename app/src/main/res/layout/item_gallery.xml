@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="gallery"
+            type="hakob.task.task.data.GalleryEntity" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="180dp"
+        android:layout_height="240dp"
+        android:layout_margin="2dp">
+
+        <ImageView
+            android:layout_width="180dp"
+            android:layout_height="240dp"
+            android:scaleType="centerCrop"
+            android:url="@{gallery.contentUrl}"></ImageView>
+
+    </FrameLayout>
+</layout>

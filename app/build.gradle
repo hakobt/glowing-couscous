@@ -1,0 +1,70 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "hakob.task.task"
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            buildConfigField("String", "BASE_URL", "\"http://develandoo.getsandbox.com/\"")
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    dataBinding {
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation deps.jetpack.appcompat
+    implementation deps.jetpack.core
+    implementation deps.jetpack.constraintLayout
+    implementation deps.jetpack.material
+
+    implementation deps.arch.lifecycleExtensions
+    annotationProcessor deps.arch.lifecycleCompiler
+
+    implementation deps.arch.room.runtime
+    annotationProcessor deps.arch.room.compiler
+
+    implementation deps.okHttp.okHttp
+    implementation deps.okHttp.retrofit
+    implementation deps.okHttp.gson
+    implementation deps.okHttp.interceptor
+    implementation deps.okHttp.rx
+
+    implementation deps.dagger.dagger
+    implementation deps.dagger.daggerAndroid
+    implementation deps.dagger.daggerAndroidSupport
+    annotationProcessor deps.dagger.daggerCompiler
+    annotationProcessor deps.dagger.daggerAndroidCompiler
+
+    implementation deps.rx.java
+    implementation deps.rx.android
+    implementation deps.rx.binding
+
+    implementation 'com.jakewharton:butterknife:9.0.0-rc1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
