@@ -20,7 +20,7 @@ import hakob.task.task.data.VideoEntity;
                 GalleryEntity.class,
                 VideoEntity.class
         },
-        version = 3,
+        version = 4,
         exportSchema = false)
 @TypeConverters(NewsDb.DateTimeConverter.class)
 public abstract class NewsDb extends RoomDatabase {

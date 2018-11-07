@@ -4,7 +4,6 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -22,31 +21,37 @@ import hakob.task.task.data.VideoEntity;
 public abstract class NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract long addNewsItem(NewsEntity item);
+    public abstract long insertNews(List<NewsEntity> entities);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void addGallery(GalleryEntity entity);
+    public abstract void insertGallery(List<GalleryEntity> entities);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void addVideo(VideoEntity videoEntity);
+    public abstract void insertVideos(List<VideoEntity> videoEntity);
 
     @Update
     public abstract void updateNewsItem(NewsEntity newsEntity);
 
+    @Query("UPDATE news SET isRead = :read WHERE shareUrl = :url")
+    public abstract void setNewsItemRead(String url, boolean read);
+
     @Query("SELECT * FROM news ORDER BY date DESC")
     public abstract LiveData<List<NewsEntity>> getAll();
 
-    @Query("SELECT * FROM gallery WHERE parentId = :newsId")
-    public abstract LiveData<List<GalleryEntity>> getGalleryWithId(int newsId);
+    @Query("SELECT * FROM gallery WHERE parentKey = :url")
+    public abstract LiveData<List<GalleryEntity>> getGalleryWithId(String url);
 
-    @Query("SELECT * FROM video WHERE parentId = :newsId")
-    public abstract LiveData<List<VideoEntity>> getVideosWithId(int newsId);
+    @Query("SELECT * FROM video WHERE parentKey = :url")
+    public abstract LiveData<List<VideoEntity>> getVideosWithId(String url);
 
-    @Query("SELECT * FROM news WHERE id = :id")
-    public abstract LiveData<NewsEntity> getNewsItemById(int id);
+    @Query("SELECT * FROM news WHERE shareUrl = :url")
+    public abstract LiveData<NewsEntity> getNewsItemById(String url);
+
+    @Query("SELECT * FROM news WHERE shareUrl = :url")
+    public abstract NewsEntity getNewsItem(String url);
 
     @Query("DELETE FROM news")
-    abstract void deleteAllNews();
+    public abstract void deleteAllNews();
 
     @Query("DELETE FROM gallery")
     abstract void deleteAllGallery();
@@ -60,7 +65,4 @@ public abstract class NewsDao {
         deleteAllVideos();
         deleteAllNews();
     }
-
-    @Delete
-    abstract void delete(NewsEntity newsEntity);
 }

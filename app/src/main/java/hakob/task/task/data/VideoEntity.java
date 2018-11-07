@@ -12,19 +12,24 @@ import static androidx.room.ForeignKey.CASCADE;
  * Package hakob.task.task.data
  */
 @Entity(tableName = "video",
-        foreignKeys = @ForeignKey(entity = NewsEntity.class, parentColumns = "id", childColumns = "parentId", onDelete = CASCADE),
-        indices = @Index(value = "parentId")
+        foreignKeys = @ForeignKey(entity =
+                NewsEntity.class,
+                parentColumns = "shareUrl",
+                childColumns = "parentKey",
+                onDelete = CASCADE
+        ),
+        indices = @Index(value = "parentKey")
 )
 public class VideoEntity {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int parentId;
+    private String parentKey;
     private String title;
     private String thumbnailUrl;
     private String youtubeId;
 
-    public VideoEntity(int parentId, String title, String thumbnailUrl, String youtubeId) {
-        this.parentId = parentId;
+    public VideoEntity(String parentKey, String title, String thumbnailUrl, String youtubeId) {
+        this.parentKey = parentKey;
         this.title = title;
         this.thumbnailUrl = thumbnailUrl;
         this.youtubeId = youtubeId;
@@ -38,12 +43,12 @@ public class VideoEntity {
         this.id = id;
     }
 
-    public int getParentId() {
-        return parentId;
+    public String getParentKey() {
+        return parentKey;
     }
 
-    public void setParentId(int parentId) {
-        this.parentId = parentId;
+    public void setParentKey(String parentKey) {
+        this.parentKey = parentKey;
     }
 
     public String getTitle() {

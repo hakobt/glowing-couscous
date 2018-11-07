@@ -4,12 +4,12 @@ import android.os.Bundle;
 
 import javax.inject.Inject;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hakob.task.task.R;
-import hakob.task.task.ViewModelFactory;
 import hakob.task.task.common.InjectableAppCompatActivity;
 import hakob.task.task.data.NetworkStatus;
 import hakob.task.task.ui.detail.DetailFragment;
@@ -21,7 +21,7 @@ public class MainActivity extends InjectableAppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
-    ViewModelFactory viewModelFactory;
+    ViewModelProvider.Factory viewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +57,11 @@ public class MainActivity extends InjectableAppCompatActivity {
         }
     }
 
-    public void showDetailsScreen(int id) {
-        DetailFragment detailFragment = DetailFragment.create(id);
+    public void showDetailsScreen(String url) {
+        DetailFragment detailFragment = DetailFragment.create(url);
 
         getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                 .add(R.id.details_container, detailFragment, DetailFragment.class.getSimpleName())
                 .addToBackStack(DetailFragment.class.getSimpleName())
                 .commit();

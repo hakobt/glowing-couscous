@@ -2,6 +2,7 @@ package hakob.task.task.data;
 
 import android.annotation.SuppressLint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,16 +54,16 @@ public class NewsRepository {
         return newsDao.getAll();
     }
 
-    public LiveData<NewsEntity> getNewsItemWithId(int id) {
-        return newsDao.getNewsItemById(id);
+    public LiveData<NewsEntity> getNewsItemWithId(String url) {
+        return newsDao.getNewsItemById(url);
     }
 
-    public LiveData<List<GalleryEntity>> getGalleryWithNewsId(int id) {
-        return newsDao.getGalleryWithId(id);
+    public LiveData<List<GalleryEntity>> getGalleryWithNewsId(String url) {
+        return newsDao.getGalleryWithId(url);
     }
 
-    public LiveData<List<VideoEntity>> getVideosWithNewsId(int id) {
-        return newsDao.getVideosWithId(id);
+    public LiveData<List<VideoEntity>> getVideosWithNewsId(String url) {
+        return newsDao.getVideosWithId(url);
     }
 
     public void forceRefresh() {
@@ -91,7 +92,9 @@ public class NewsRepository {
         }
         List<NewsItemResponse> data = response.body().getData();
         return Completable.create(emitter -> {
-            newsDao.deleteAll();
+            ArrayList<NewsEntity> newsEntities = new ArrayList<>();
+            ArrayList<GalleryEntity> galleryEntities = new ArrayList<>();
+            ArrayList<VideoEntity> videoEntities = new ArrayList<>();
             for (NewsItemResponse newsItemResponse : data) {
                 NewsEntity newsEntity = new NewsEntity(
                         newsItemResponse.getShareUrl(),
@@ -101,30 +104,38 @@ public class NewsRepository {
                         newsItemResponse.getCoverPhotoUrl(),
                         newsItemResponse.getDate()
                 );
-                int parentId = (int) newsDao.addNewsItem(newsEntity);
+                NewsEntity oldEntity = newsDao.getNewsItem(newsEntity.getShareUrl());
+                if (oldEntity != null && oldEntity.isRead()) {
+                    newsEntity.setRead(true);
+                }
+                newsEntities.add(newsEntity);
+                String parentKey = newsItemResponse.getShareUrl();
                 if (newsItemResponse.getGallery() != null) {
                     for (Gallery gallery : newsItemResponse.getGallery()) {
                         GalleryEntity galleryEntity = new GalleryEntity(
                                 gallery.getTitle(),
                                 gallery.getThumbnailUrl(),
                                 gallery.getContentUrl(),
-                                parentId
+                                parentKey
                         );
-                        newsDao.addGallery(galleryEntity);
+                        galleryEntities.add(galleryEntity);
                     }
                 }
                 if (newsItemResponse.getVideo() != null) {
                     for (Video video : newsItemResponse.getVideo()) {
                         VideoEntity videoEntity = new VideoEntity(
-                                parentId,
+                                parentKey,
                                 video.getTitle(),
                                 video.getThumbnailUrl(),
                                 video.getYoutubeId()
                         );
-                        newsDao.addVideo(videoEntity);
+                        videoEntities.add(videoEntity);
                     }
                 }
             }
+            newsDao.insertNews(newsEntities);
+            newsDao.insertGallery(galleryEntities);
+            newsDao.insertVideos(videoEntities);
             networkStatus.postValue(NetworkStatus.SUCCESS);
             emitter.onComplete();
         });

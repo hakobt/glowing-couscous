@@ -17,7 +17,7 @@
             android:layout_width="180dp"
             android:layout_height="240dp"
             android:scaleType="centerCrop"
-            android:url="@{gallery.contentUrl}"></ImageView>
+            android:url="@{gallery.contentUrl}" />
 
     </FrameLayout>
 </layout>

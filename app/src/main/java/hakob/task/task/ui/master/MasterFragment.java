@@ -52,9 +52,9 @@ public class MasterFragment extends InjectableFragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(this, factory).get(MasterViewModel.class);
         newsListView.setLayoutManager(new LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false));
-        NewsListAdapter adapter = new NewsListAdapter(newsEntity -> {
+        NewsListAdapter adapter = new NewsListAdapter((newsEntity, sharedElement) -> {
             viewModel.setNewsItemRead(newsEntity);
-            ((MainActivity) requireActivity()).showDetailsScreen(newsEntity.id);
+            ((MainActivity) MasterFragment.this.requireActivity()).showDetailsScreen(newsEntity.getShareUrl());
         });
         newsListView.setAdapter(adapter);
         newsListView.addItemDecoration(new DividerItemDecoration(requireContext(), RecyclerView.VERTICAL));

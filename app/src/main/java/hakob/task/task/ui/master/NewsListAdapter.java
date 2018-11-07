@@ -1,6 +1,7 @@
 package hakob.task.task.ui.master;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,7 @@ public class NewsListAdapter extends ListAdapter<NewsEntity, NewsItemViewHolder>
     private static final DiffUtil.ItemCallback<NewsEntity> diffCallback = new DiffUtil.ItemCallback<NewsEntity>() {
         @Override
         public boolean areItemsTheSame(@NonNull NewsEntity oldItem, @NonNull NewsEntity newItem) {
-            return oldItem.id == newItem.id;
+            return oldItem.getShareUrl().equals(newItem.getShareUrl());
         }
 
         @Override
@@ -40,17 +41,18 @@ public class NewsListAdapter extends ListAdapter<NewsEntity, NewsItemViewHolder>
         NewsItemViewHolder holder = new NewsItemViewHolder(binding);
         holder.itemView.setOnClickListener(v -> {
             NewsEntity newsEntity = getItem(holder.getAdapterPosition());
-            itemClickListener.onItemClicked(newsEntity);
+            itemClickListener.onItemClicked(newsEntity, holder.cover);
         });
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull NewsItemViewHolder holder, int position) {
-        holder.bind(getItem(position));
+        NewsEntity entity = getItem(position);
+        holder.cover.setTransitionName(entity.getShareUrl());
     }
 
     interface ListItemClickListener {
-        void onItemClicked(NewsEntity newsEntity);
+        void onItemClicked(NewsEntity newsEntity, View sharedElement);
     }
 }

@@ -1,5 +1,6 @@
 package hakob.task.task.data;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -10,8 +11,8 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "news")
 public class NewsEntity {
-    @PrimaryKey(autoGenerate = true)
-    public int id;
+    @PrimaryKey
+    @NonNull
     private String shareUrl;
     private String title;
     private String category;
@@ -20,7 +21,7 @@ public class NewsEntity {
     private long date;
     private boolean isRead = false;
 
-    public NewsEntity(String shareUrl, String title, String category, String body, String coverPhotoUrl, long date) {
+    public NewsEntity(@NonNull String shareUrl, String title, String category, String body, String coverPhotoUrl, long date) {
         this.shareUrl = shareUrl;
         this.title = title;
         this.category = category;
@@ -29,11 +30,12 @@ public class NewsEntity {
         this.date = date;
     }
 
+    @NonNull
     public String getShareUrl() {
         return shareUrl;
     }
 
-    public void setShareUrl(String shareUrl) {
+    public void setShareUrl(@NonNull String shareUrl) {
         this.shareUrl = shareUrl;
     }
 
@@ -92,7 +94,6 @@ public class NewsEntity {
 
         NewsEntity that = (NewsEntity) o;
 
-        if (id != that.id) return false;
         if (date != that.date) return false;
         if (isRead != that.isRead) return false;
         if (shareUrl != null ? !shareUrl.equals(that.shareUrl) : that.shareUrl != null)
@@ -106,8 +107,7 @@ public class NewsEntity {
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (shareUrl != null ? shareUrl.hashCode() : 0);
+        int result = shareUrl != null ? shareUrl.hashCode() : 0;
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (body != null ? body.hashCode() : 0);
@@ -118,9 +118,9 @@ public class NewsEntity {
     }
 
     @Override
+    @NonNull
     public String toString() {
         return "NewsEntity{" +
-                "id=" + id +
                 ", shareUrl='" + shareUrl + '\'' +
                 ", title='" + title + '\'' +
                 ", category='" + category + '\'' +

@@ -17,6 +17,8 @@ import hakob.task.task.R;
 import hakob.task.task.common.InjectableFragment;
 import hakob.task.task.databinding.DetailsBinding;
 
+import static hakob.task.task.Constants.detailKey;
+
 /**
  * Created by Hakob Tovmasyan on 10/27/18
  * Package hakob.task.task.ui
@@ -26,7 +28,7 @@ public class DetailFragment extends InjectableFragment {
     @Inject
     ViewModelProvider.Factory factory;
 
-    private int itemId;
+    private String url;
 
     private DetailViewModel viewModel;
     private DetailsBinding binding;
@@ -42,10 +44,10 @@ public class DetailFragment extends InjectableFragment {
 
     }
 
-    public static DetailFragment create(int id) {
+    public static DetailFragment create(String url) {
         Bundle args = new Bundle();
 
-        args.putInt("id", id);
+        args.putString(detailKey, url);
 
         DetailFragment fragment = new DetailFragment();
         fragment.setArguments(args);
@@ -55,11 +57,11 @@ public class DetailFragment extends InjectableFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() == null || !getArguments().containsKey("id")) {
-            // details screen cannot exist without id
-            throw new IllegalStateException("Cannot show details screen without id provided");
+        if (getArguments() == null || !getArguments().containsKey(detailKey)) {
+            // details screen cannot exist without url
+            throw new IllegalStateException("Cannot show details screen without url provided");
         }
-        itemId = getArguments().getInt("id");
+        url = getArguments().getString("url");
     }
 
     @Nullable
@@ -75,14 +77,15 @@ public class DetailFragment extends InjectableFragment {
         galleryAdapter = new GalleryAdapter();
 
         viewModel = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
-        viewModel.getNewsItem(itemId).observe(this, news -> {
+        binding.setLifecycleOwner(this);
+        viewModel.getNewsItem(url).observe(this, news -> {
             binding.setNews(news);
             binding.executePendingBindings();
         });
-        viewModel.getGalleryItem(itemId).observe(this, galleryAdapter::submitList);
-        viewModel.getVideos(itemId).observe(this, videoEntities -> {
-        });
+        viewModel.getGalleryItem(url).observe(this, galleryAdapter::submitList);
+        viewModel.getVideos(url).observe(this, videoEntities -> {
 
+        });
         RecyclerView galleryList = binding.getRoot().findViewById(R.id.gallery);
         galleryList.setAdapter(galleryAdapter);
         galleryList.setLayoutManager(new LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false));

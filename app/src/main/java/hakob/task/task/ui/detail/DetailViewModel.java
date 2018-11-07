@@ -26,16 +26,16 @@ public class DetailViewModel extends ViewModel {
         this.newsRepository = newsRepository;
     }
 
-    public LiveData<NewsEntity> getNewsItem(int id) {
-        return newsRepository.getNewsItemWithId(id);
+    public LiveData<NewsEntity> getNewsItem(String url) {
+        return newsRepository.getNewsItemWithId(url);
     }
 
-    public LiveData<List<GalleryEntity>> getGalleryItem(int id) {
-        return newsRepository.getGalleryWithNewsId(id);
+    public LiveData<List<GalleryEntity>> getGalleryItem(String url) {
+        return newsRepository.getGalleryWithNewsId(url);
     }
 
-    public LiveData<List<VideoEntity>> getVideos(int id) {
-        return newsRepository.getVideosWithNewsId(id);
+    public LiveData<List<VideoEntity>> getVideos(String url) {
+        return newsRepository.getVideosWithNewsId(url);
     }
 
     public void setNewsItemRead(NewsEntity newsEntity) {
