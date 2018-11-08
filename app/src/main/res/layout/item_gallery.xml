@@ -3,8 +3,8 @@
 
     <data>
         <variable
-            name="galleryResponse"
-            type="hakob.task.task.data.GalleryEntity" />
+            name="gallery"
+            type="hakob.task.news.data.Gallery" />
     </data>
 
     <FrameLayout
@@ -14,6 +14,6 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:url="@{galleryResponse.contentUrl}" />
+            android:url="@{gallery.contentUrl}" />
     </FrameLayout>
 </layout>

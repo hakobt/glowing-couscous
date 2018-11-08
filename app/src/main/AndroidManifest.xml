@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="hakob.task.task">
+    package="hakob.task.news">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".NewsApp"
+        android:name="hakob.task.news.NewsApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Cool News"
@@ -14,15 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.SplashActivity">
+        <activity android:name="hakob.task.news.ui.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity" />
-        <activity android:name=".ui.image.ImageViewActivity"></activity>
+        <activity android:name="hakob.task.news.ui.MainActivity" />
+        <activity android:name="hakob.task.news.ui.image.ImageViewActivity"></activity>
     </application>
 
 </manifest>
