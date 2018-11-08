@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hakob.task.news.R;
+import hakob.task.news.common.ItemClickListener;
 import hakob.task.news.data.News;
 import hakob.task.news.databinding.ItemNewsBinding;
 
@@ -31,10 +32,9 @@ public class NewsListAdapter extends ListAdapter<News, NewsItemViewHolder> {
             return oldItem.equals(newItem);
         }
     };
+    private final ItemClickListener<News> itemClickListener;
 
-    private final ListItemClickListener itemClickListener;
-
-    public NewsListAdapter(ListItemClickListener itemClickListener) {
+    public NewsListAdapter(ItemClickListener<News> itemClickListener) {
         super(diffCallback);
         this.itemClickListener = itemClickListener;
     }
@@ -55,10 +55,6 @@ public class NewsListAdapter extends ListAdapter<News, NewsItemViewHolder> {
     public void onBindViewHolder(@NonNull NewsItemViewHolder holder, int position) {
         News entity = getItem(position);
         holder.bind(entity);
-    }
-
-    interface ListItemClickListener {
-        void onItemClicked(News news);
     }
 }
 

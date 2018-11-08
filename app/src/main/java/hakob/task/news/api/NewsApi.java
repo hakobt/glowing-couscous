@@ -10,7 +10,6 @@ import retrofit2.http.GET;
  * Package hakob.task.task.api
  */
 public interface NewsApi {
-
     @GET("feed")
     Single<Response<FeedResponse>> getFeed();
 }

@@ -75,5 +75,29 @@ public class Video {
         this.youtubeId = youtubeId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Video video = (Video) o;
+
+        if (id != video.id) return false;
+        if (parentKey != null ? !parentKey.equals(video.parentKey) : video.parentKey != null)
+            return false;
+        if (title != null ? !title.equals(video.title) : video.title != null) return false;
+        if (thumbnailUrl != null ? !thumbnailUrl.equals(video.thumbnailUrl) : video.thumbnailUrl != null)
+            return false;
+        return youtubeId != null ? youtubeId.equals(video.youtubeId) : video.youtubeId == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (parentKey != null ? parentKey.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (thumbnailUrl != null ? thumbnailUrl.hashCode() : 0);
+        result = 31 * result + (youtubeId != null ? youtubeId.hashCode() : 0);
+        return result;
+    }
 }

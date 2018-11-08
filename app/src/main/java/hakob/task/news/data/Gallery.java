@@ -75,4 +75,30 @@ public class Gallery {
     public void setParentKey(String parentKey) {
         this.parentKey = parentKey;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Gallery gallery = (Gallery) o;
+
+        if (id != gallery.id) return false;
+        if (parentKey != null ? !parentKey.equals(gallery.parentKey) : gallery.parentKey != null)
+            return false;
+        if (title != null ? !title.equals(gallery.title) : gallery.title != null) return false;
+        if (thumbnailUrl != null ? !thumbnailUrl.equals(gallery.thumbnailUrl) : gallery.thumbnailUrl != null)
+            return false;
+        return contentUrl != null ? contentUrl.equals(gallery.contentUrl) : gallery.contentUrl == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (parentKey != null ? parentKey.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (thumbnailUrl != null ? thumbnailUrl.hashCode() : 0);
+        result = 31 * result + (contentUrl != null ? contentUrl.hashCode() : 0);
+        return result;
+    }
 }

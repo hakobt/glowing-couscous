@@ -1,7 +1,9 @@
 package hakob.task.news.ui;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -20,6 +22,7 @@ import hakob.task.news.R;
 import hakob.task.news.common.InjectableAppCompatActivity;
 import hakob.task.news.data.NetworkStatus;
 import hakob.task.news.data.News;
+import hakob.task.news.data.Video;
 import hakob.task.news.ui.detail.DetailFragment;
 import hakob.task.news.ui.image.ImageViewActivity;
 import hakob.task.news.ui.master.MasterFragment;
@@ -101,5 +104,17 @@ public class MainActivity extends InjectableAppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    public void showVideo(Video video) {
+        String id = video.getYoutubeId();
+        Intent appIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+        Intent webIntent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("http://www.youtube.com/watch?v=" + id));
+        try {
+            startActivity(appIntent);
+        } catch (ActivityNotFoundException ex) {
+            startActivity(webIntent);
+        }
     }
 }

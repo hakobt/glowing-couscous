@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
+import com.google.android.flexbox.AlignItems;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
+import com.google.android.flexbox.FlexboxLayoutManager;
 
 import javax.inject.Inject;
 
@@ -16,15 +18,14 @@ import androidx.annotation.Nullable;
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.transition.Transition;
 import androidx.transition.TransitionInflater;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hakob.task.news.R;
 import hakob.task.news.common.InjectableFragment;
-import hakob.task.news.data.News;
 import hakob.task.news.databinding.DetailsBinding;
 import hakob.task.news.ui.MainActivity;
 
@@ -42,18 +43,20 @@ public class DetailFragment extends InjectableFragment {
     @BindView(R.id.cover)
     ImageView cover;
 
+    @BindView(R.id.gallery)
+    RecyclerView galleryListView;
+
+    @BindView(R.id.video_list)
+    RecyclerView videoListView;
+
     private String url;
 
     private DetailViewModel viewModel;
     private DetailsBinding binding;
 
     private GalleryAdapter galleryAdapter;
+    private VideoAdapter videoAdapter;
 
-    /**
-     * Use DetailFragment.create(int id) method
-     *
-     * @deprecated
-     */
     public DetailFragment() {
 
     }
@@ -82,13 +85,8 @@ public class DetailFragment extends InjectableFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DetailsBinding.inflate(inflater, container, false);
+        binding.setLifecycleOwner(this);
         ButterKnife.bind(this, binding.getRoot());
-
-        cover.setTransitionName(url);
-
-        if (savedInstanceState == null) {
-            postponeEnterTransition();
-        }
 
         Transition transition = TransitionInflater.from(requireContext()).inflateTransition(R.transition.shared_element_transition);
         transition.setDuration(225);
@@ -100,17 +98,13 @@ public class DetailFragment extends InjectableFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        galleryAdapter = new GalleryAdapter(galleryEntity -> {
-            ((MainActivity) requireActivity()).showFullscreenImage(galleryEntity.getId());
-        });
-
         viewModel = ViewModelProviders.of(this, factory).get(DetailViewModel.class);
-        binding.setLifecycleOwner(this);
         viewModel.getNewsItem(url).observe(this, news -> {
             binding.setNews(news);
             binding.executePendingBindings();
-            setupTransition(news);
         });
+        setupGallery();
+        setupVideos();
         viewModel.getGalleryItem(url).observe(this, list -> {
             if (list == null || list.isEmpty()) {
                 binding.setHasGallery(false);
@@ -124,29 +118,29 @@ public class DetailFragment extends InjectableFragment {
                 binding.setHasVideos(false);
                 return;
             }
+            videoAdapter.submitList(videos);
             binding.setHasVideos(true);
         });
-        RecyclerView galleryList = binding.getRoot().findViewById(R.id.gallery);
-        galleryList.setAdapter(galleryAdapter);
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, RecyclerView.VERTICAL);
-        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        galleryList.setLayoutManager(layoutManager);
-        galleryList.setNestedScrollingEnabled(false);
     }
 
-    private void setupTransition(News news) {
-        Picasso.get()
-                .load(news.getCoverPhotoUrl())
-                .into(cover, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        startPostponedEnterTransition();
-                    }
+    private void setupVideos() {
+        videoAdapter = new VideoAdapter(video -> {
+            ((MainActivity) requireActivity()).showVideo(video);
+        });
+        videoListView.setAdapter(videoAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false);
+        videoListView.setLayoutManager(layoutManager);
+    }
 
-                    @Override
-                    public void onError(Exception e) {
-                        startPostponedEnterTransition();
-                    }
-                });
+    private void setupGallery() {
+        galleryAdapter = new GalleryAdapter(gallery -> {
+            ((MainActivity) requireActivity()).showFullscreenImage(gallery.getId());
+        });
+        galleryListView.setAdapter(galleryAdapter);
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext(), FlexDirection.ROW);
+        layoutManager.setFlexWrap(FlexWrap.WRAP);
+        layoutManager.setAlignItems(AlignItems.STRETCH);
+        galleryListView.setLayoutManager(layoutManager);
+        galleryListView.setNestedScrollingEnabled(false);
     }
 }

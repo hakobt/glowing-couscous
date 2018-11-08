@@ -12,4 +12,5 @@
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="primaryVeryLightColor">#616161</color>
+    <color name="transparentBlack">#32000000</color>
 </resources>
