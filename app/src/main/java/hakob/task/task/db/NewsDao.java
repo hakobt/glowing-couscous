@@ -8,7 +8,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
-import androidx.room.Update;
 import hakob.task.task.data.GalleryEntity;
 import hakob.task.task.data.NewsEntity;
 import hakob.task.task.data.VideoEntity;
@@ -21,16 +20,13 @@ import hakob.task.task.data.VideoEntity;
 public abstract class NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract long insertNews(List<NewsEntity> entities);
+    public abstract void insertNews(List<NewsEntity> entities);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertGallery(List<GalleryEntity> entities);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertVideos(List<VideoEntity> videoEntity);
-
-    @Update
-    public abstract void updateNewsItem(NewsEntity newsEntity);
 
     @Query("UPDATE news SET isRead = :read WHERE shareUrl = :url")
     public abstract void setNewsItemRead(String url, boolean read);
@@ -39,10 +35,13 @@ public abstract class NewsDao {
     public abstract LiveData<List<NewsEntity>> getAll();
 
     @Query("SELECT * FROM gallery WHERE parentKey = :url")
-    public abstract LiveData<List<GalleryEntity>> getGalleryWithId(String url);
+    public abstract LiveData<List<GalleryEntity>> getGalleriesWithNewsId(String url);
+
+    @Query("SELECT * FROM gallery WHERE id = :id")
+    public abstract LiveData<GalleryEntity> getGallery(int id);
 
     @Query("SELECT * FROM video WHERE parentKey = :url")
-    public abstract LiveData<List<VideoEntity>> getVideosWithId(String url);
+    public abstract LiveData<List<VideoEntity>> getVideosWithNewsId(String url);
 
     @Query("SELECT * FROM news WHERE shareUrl = :url")
     public abstract LiveData<NewsEntity> getNewsItemById(String url);

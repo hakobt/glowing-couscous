@@ -24,7 +24,6 @@ public class MasterViewModel extends ViewModel {
     }
 
     public void setNewsItemRead(NewsEntity newsEntity) {
-        newsEntity.setRead(true);
         newsRepository.updateNewsItem(newsEntity);
     }
 }

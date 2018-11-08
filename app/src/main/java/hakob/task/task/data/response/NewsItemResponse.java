@@ -18,8 +18,8 @@ public class NewsItemResponse {
     private String coverPhotoUrl;
     @SerializedName("date")
     private long date;
-    @SerializedName("gallery")
-    private List<Gallery> gallery;
+    @SerializedName("galleryResponse")
+    private List<GalleryResponse> galleryResponse;
     @SerializedName("video")
     private List<Video> video;
 
@@ -47,8 +47,8 @@ public class NewsItemResponse {
         return date;
     }
 
-    public List<Gallery> getGallery() {
-        return gallery;
+    public List<GalleryResponse> getGalleryResponse() {
+        return galleryResponse;
     }
 
     public List<Video> getVideo() {

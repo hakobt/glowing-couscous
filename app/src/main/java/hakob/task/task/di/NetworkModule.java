@@ -6,6 +6,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import java.util.Arrays;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -13,6 +15,7 @@ import dagger.Provides;
 import hakob.task.task.BuildConfig;
 import hakob.task.task.api.NewsApi;
 import okhttp3.Cache;
+import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -52,6 +55,7 @@ public class NetworkModule {
         return new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
                 .retryOnConnectionFailure(true)
+                .connectionSpecs(Arrays.asList(ConnectionSpec.MODERN_TLS, ConnectionSpec.CLEARTEXT))
                 .cache(new Cache(context.getCacheDir(), 100 * 1024 * 1024))
                 .build();
     }

@@ -37,9 +37,4 @@ public class DetailViewModel extends ViewModel {
     public LiveData<List<VideoEntity>> getVideos(String url) {
         return newsRepository.getVideosWithNewsId(url);
     }
-
-    public void setNewsItemRead(NewsEntity newsEntity) {
-        newsEntity.setRead(true);
-        newsRepository.updateNewsItem(newsEntity);
-    }
 }

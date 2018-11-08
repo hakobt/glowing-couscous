@@ -74,4 +74,6 @@ public class VideoEntity {
     public void setYoutubeId(String youtubeId) {
         this.youtubeId = youtubeId;
     }
+
+
 }

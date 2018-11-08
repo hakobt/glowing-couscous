@@ -1,7 +1,6 @@
 package hakob.task.task.ui.master;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -41,7 +40,7 @@ public class NewsListAdapter extends ListAdapter<NewsEntity, NewsItemViewHolder>
         NewsItemViewHolder holder = new NewsItemViewHolder(binding);
         holder.itemView.setOnClickListener(v -> {
             NewsEntity newsEntity = getItem(holder.getAdapterPosition());
-            itemClickListener.onItemClicked(newsEntity, holder.cover);
+            itemClickListener.onItemClicked(newsEntity);
         });
         return holder;
     }
@@ -49,10 +48,10 @@ public class NewsListAdapter extends ListAdapter<NewsEntity, NewsItemViewHolder>
     @Override
     public void onBindViewHolder(@NonNull NewsItemViewHolder holder, int position) {
         NewsEntity entity = getItem(position);
-        holder.cover.setTransitionName(entity.getShareUrl());
+        holder.bind(entity);
     }
 
     interface ListItemClickListener {
-        void onItemClicked(NewsEntity newsEntity, View sharedElement);
+        void onItemClicked(NewsEntity newsEntity);
     }
 }

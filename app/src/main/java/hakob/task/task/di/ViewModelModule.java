@@ -8,6 +8,7 @@ import dagger.multibindings.IntoMap;
 import hakob.task.task.ViewModelFactory;
 import hakob.task.task.ui.MainActivityViewModel;
 import hakob.task.task.ui.detail.DetailViewModel;
+import hakob.task.task.ui.image.ImageViewModel;
 import hakob.task.task.ui.master.MasterViewModel;
 
 /**
@@ -35,4 +36,9 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainActivityViewModel.class)
     abstract ViewModel bindMainActivityViewModel(MainActivityViewModel mainActivityViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ImageViewModel.class)
+    abstract ViewModel bindImageViewModel(ImageViewModel imageViewModel);
 }

@@ -1,19 +1,31 @@
 package hakob.task.task.ui;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hakob.task.task.Constants;
 import hakob.task.task.R;
 import hakob.task.task.common.InjectableAppCompatActivity;
 import hakob.task.task.data.NetworkStatus;
+import hakob.task.task.data.NewsEntity;
 import hakob.task.task.ui.detail.DetailFragment;
+import hakob.task.task.ui.image.ImageViewActivity;
 import hakob.task.task.ui.master.MasterFragment;
+
+import static hakob.task.task.Constants.imageKey;
+import static hakob.task.task.Constants.isTablet;
 
 public class MainActivity extends InjectableAppCompatActivity {
 
@@ -23,11 +35,19 @@ public class MainActivity extends InjectableAppCompatActivity {
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Constants.isTablet) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
             MasterFragment fragment = MasterFragment.newInstance();
@@ -47,8 +67,9 @@ public class MainActivity extends InjectableAppCompatActivity {
 
     private void showNetworkStatus(NetworkStatus networkStatus) {
         switch (networkStatus) {
-            case SUCCESS:
             case ERROR:
+                Snackbar.make(swipeRefreshLayout, "Failed to load content", Snackbar.LENGTH_SHORT).show();
+            case SUCCESS:
                 swipeRefreshLayout.setRefreshing(false);
                 break;
             case LOADING:
@@ -57,20 +78,28 @@ public class MainActivity extends InjectableAppCompatActivity {
         }
     }
 
-    public void showDetailsScreen(String url) {
-        DetailFragment detailFragment = DetailFragment.create(url);
+    public void showFullscreenImage(int imageId) {
+        Intent intent = new Intent(this, ImageViewActivity.class);
+        intent.putExtra(imageKey, imageId);
+        startActivityForResult(intent, 42);
+    }
 
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
-                .add(R.id.details_container, detailFragment, DetailFragment.class.getSimpleName())
-                .addToBackStack(DetailFragment.class.getSimpleName())
-                .commit();
-        swipeRefreshLayout.setEnabled(false);
+    public void showDetailsScreen(NewsEntity newsEntity) {
+        DetailFragment detailFragment = DetailFragment.create(newsEntity.getShareUrl());
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.details_container, detailFragment);
+
+        if (!isTablet) {
+            fragmentTransaction.addToBackStack(detailFragment.getClass().getSimpleName());
+        }
+
+        fragmentTransaction.commit();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        swipeRefreshLayout.setEnabled(true);
     }
 }

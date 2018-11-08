@@ -19,7 +19,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import hakob.task.task.R;
 import hakob.task.task.common.InjectableFragment;
-import hakob.task.task.data.NewsEntity;
 import hakob.task.task.ui.MainActivity;
 
 public class MasterFragment extends InjectableFragment {
@@ -50,19 +49,17 @@ public class MasterFragment extends InjectableFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(this, factory).get(MasterViewModel.class);
         newsListView.setLayoutManager(new LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false));
-        NewsListAdapter adapter = new NewsListAdapter((newsEntity, sharedElement) -> {
+        NewsListAdapter adapter = new NewsListAdapter(newsEntity -> {
             viewModel.setNewsItemRead(newsEntity);
-            ((MainActivity) MasterFragment.this.requireActivity()).showDetailsScreen(newsEntity.getShareUrl());
+            ((MainActivity) MasterFragment.this.requireActivity()).showDetailsScreen(newsEntity);
         });
         newsListView.setAdapter(adapter);
         newsListView.addItemDecoration(new DividerItemDecoration(requireContext(), RecyclerView.VERTICAL));
+        viewModel = ViewModelProviders.of(this, factory).get(MasterViewModel.class);
         viewModel.getNews().observe(this, list -> {
             adapter.submitList(list);
-            for (NewsEntity newsEntity : list) {
-                Log.d("App", newsEntity.toString());
-            }
+            Log.d("News", "items");
         });
     }
 }

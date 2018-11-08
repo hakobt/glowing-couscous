@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="newsEntity"
             type="hakob.task.task.data.NewsEntity" />
@@ -16,7 +15,7 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/colorPrimaryDark"
+        app:cardBackgroundColor="@color/colorPrimary"
         app:cardElevation="8dp"
         app:contentPadding="16dp">
 
@@ -28,8 +27,10 @@
                 android:id="@+id/title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="@{newsEntity.title}"
                 android:textAppearance="@android:style/TextAppearance.Material.Title"
+                android:textColor="@{newsEntity.read ? @color/purple : @color/primaryTextColor}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/date"
                 app:layout_constraintTop_toBottomOf="@id/coverImageContainer"
@@ -49,7 +50,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:url="@{newsEntity.coverPhotoUrl}" />
+                    android:url="@{newsEntity.coverPhotoUrl}"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -57,6 +59,7 @@
                 android:id="@+id/category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="@{newsEntity.category}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
@@ -66,12 +69,21 @@
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:date="@{newsEntity.date}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
                 tools:text="Published on 21.08.2018" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--<View-->
+        <!--android:id="@+id/overlay"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:alpha="0.3"-->
+        <!--android:background="@color/colorRead"-->
+        <!--app:isVisible="@{newsEntity.read}" />-->
 
     </com.google.android.material.card.MaterialCardView>
 

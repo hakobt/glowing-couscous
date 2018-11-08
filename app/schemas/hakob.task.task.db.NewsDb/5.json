@@ -1,0 +1,199 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 5,
+    "identityHash": "ef90bf42e3fb17e891ecb11b2a9ff89b",
+    "entities": [
+      {
+        "tableName": "news",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shareUrl` TEXT NOT NULL, `title` TEXT, `category` TEXT, `body` TEXT, `coverPhotoUrl` TEXT, `date` INTEGER NOT NULL, `isRead` INTEGER NOT NULL, PRIMARY KEY(`shareUrl`))",
+        "fields": [
+          {
+            "fieldPath": "shareUrl",
+            "columnName": "shareUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "body",
+            "columnName": "body",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "coverPhotoUrl",
+            "columnName": "coverPhotoUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isRead",
+            "columnName": "isRead",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "shareUrl"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "gallery",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parentKey` TEXT, `title` TEXT, `thumbnailUrl` TEXT, `contentUrl` TEXT, FOREIGN KEY(`parentKey`) REFERENCES `news`(`shareUrl`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentKey",
+            "columnName": "parentKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailUrl",
+            "columnName": "thumbnailUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contentUrl",
+            "columnName": "contentUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_gallery_parentKey",
+            "unique": false,
+            "columnNames": [
+              "parentKey"
+            ],
+            "createSql": "CREATE  INDEX `index_gallery_parentKey` ON `${TABLE_NAME}` (`parentKey`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "news",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "parentKey"
+            ],
+            "referencedColumns": [
+              "shareUrl"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "video",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parentKey` TEXT, `title` TEXT, `thumbnailUrl` TEXT, `youtubeId` TEXT, FOREIGN KEY(`parentKey`) REFERENCES `news`(`shareUrl`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "parentKey",
+            "columnName": "parentKey",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thumbnailUrl",
+            "columnName": "thumbnailUrl",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "youtubeId",
+            "columnName": "youtubeId",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_video_parentKey",
+            "unique": false,
+            "columnNames": [
+              "parentKey"
+            ],
+            "createSql": "CREATE  INDEX `index_video_parentKey` ON `${TABLE_NAME}` (`parentKey`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "news",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "parentKey"
+            ],
+            "referencedColumns": [
+              "shareUrl"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"ef90bf42e3fb17e891ecb11b2a9ff89b\")"
+    ]
+  }
+}

@@ -96,7 +96,7 @@ public class NewsEntity {
 
         if (date != that.date) return false;
         if (isRead != that.isRead) return false;
-        if (shareUrl != null ? !shareUrl.equals(that.shareUrl) : that.shareUrl != null)
+        if (!shareUrl.equals(that.shareUrl))
             return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;
         if (category != null ? !category.equals(that.category) : that.category != null)
@@ -107,7 +107,7 @@ public class NewsEntity {
 
     @Override
     public int hashCode() {
-        int result = shareUrl != null ? shareUrl.hashCode() : 0;
+        int result = shareUrl.hashCode();
         result = 31 * result + (title != null ? title.hashCode() : 0);
         result = 31 * result + (category != null ? category.hashCode() : 0);
         result = 31 * result + (body != null ? body.hashCode() : 0);
@@ -129,4 +129,6 @@ public class NewsEntity {
                 ", isRead=" + isRead +
                 '}';
     }
+
+
 }

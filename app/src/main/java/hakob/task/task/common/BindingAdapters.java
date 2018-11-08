@@ -2,6 +2,7 @@ package hakob.task.task.common;
 
 import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,6 +45,11 @@ public class BindingAdapters {
     public static void setFormattedText(TextView textView, String text) {
         if (text == null) return;
         textView.setText(Html.fromHtml(text));
+    }
+
+    @BindingAdapter("app:isVisible")
+    public static void setVisibility(View view, boolean visibility) {
+        view.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
 }

@@ -5,22 +5,24 @@
 
     <data>
 
+        <import type="android.view.View" />
         <variable
             name="news"
             type="hakob.task.task.data.NewsEntity" />
 
         <variable
-            name="video"
-            type="hakob.task.task.data.VideoEntity" />
+            name="hasVideos"
+            type="boolean" />
 
         <variable
-            name="gallery"
-            type="hakob.task.task.data.GalleryEntity" />
+            name="hasGallery"
+            type="boolean" />
     </data>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -50,9 +52,7 @@
                 android:layout_marginEnd="8dp"
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
-                android:scaleType="centerCrop"
-                android:transitionName="cover"
-                android:url="@{news.coverPhotoUrl}"
+                android:scaleType="fitCenter"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -96,22 +96,53 @@
                 app:layout_constraintTop_toTopOf="@+id/date"
                 tools:text="Music" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/gallery"
+            <TextView
+                android:id="@+id/gallery_title"
                 android:layout_width="0dp"
-                android:layout_height="200dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
+                android:text="Gallery"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                android:visibility="@{hasGallery ? View.VISIBLE : View.GONE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/body" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/galleryResponse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/gallery_title"
+                android:visibility="@{hasGallery ? View.VISIBLE : View.GONE}"
+                tools:visibility="gone" />
 
             <Space
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/gallery" />
+                app:layout_constraintTop_toBottomOf="@id/galleryResponse" />
+
+            <TextView
+                android:id="@+id/video_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:text="Videos"
+                android:visibility="@{hasVideos ? View.VISIBLE : View.GONE}"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/galleryResponse" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

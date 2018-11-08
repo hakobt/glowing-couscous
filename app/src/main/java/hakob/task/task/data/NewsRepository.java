@@ -13,7 +13,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import hakob.task.task.api.NewsApi;
 import hakob.task.task.data.response.FeedResponse;
-import hakob.task.task.data.response.Gallery;
+import hakob.task.task.data.response.GalleryResponse;
 import hakob.task.task.data.response.NewsItemResponse;
 import hakob.task.task.data.response.Video;
 import hakob.task.task.db.NewsDao;
@@ -46,7 +46,7 @@ public class NewsRepository {
         this.newsApi = newsApi;
     }
 
-    public MutableLiveData<NetworkStatus> getNetworkStatus() {
+    public LiveData<NetworkStatus> getNetworkStatus() {
         return networkStatus;
     }
 
@@ -59,11 +59,11 @@ public class NewsRepository {
     }
 
     public LiveData<List<GalleryEntity>> getGalleryWithNewsId(String url) {
-        return newsDao.getGalleryWithId(url);
+        return newsDao.getGalleriesWithNewsId(url);
     }
 
     public LiveData<List<VideoEntity>> getVideosWithNewsId(String url) {
-        return newsDao.getVideosWithId(url);
+        return newsDao.getVideosWithNewsId(url);
     }
 
     public void forceRefresh() {
@@ -110,12 +110,12 @@ public class NewsRepository {
                 }
                 newsEntities.add(newsEntity);
                 String parentKey = newsItemResponse.getShareUrl();
-                if (newsItemResponse.getGallery() != null) {
-                    for (Gallery gallery : newsItemResponse.getGallery()) {
+                if (newsItemResponse.getGalleryResponse() != null) {
+                    for (GalleryResponse galleryResponse : newsItemResponse.getGalleryResponse()) {
                         GalleryEntity galleryEntity = new GalleryEntity(
-                                gallery.getTitle(),
-                                gallery.getThumbnailUrl(),
-                                gallery.getContentUrl(),
+                                galleryResponse.getTitle(),
+                                galleryResponse.getThumbnailUrl(),
+                                galleryResponse.getContentUrl(),
                                 parentKey
                         );
                         galleryEntities.add(galleryEntity);
@@ -141,11 +141,15 @@ public class NewsRepository {
         });
     }
 
-    public void updateNewsItem(NewsEntity newsEntity) {
+    public void updateNewsItem(NewsEntity entity) {
         Completable.create(emitter -> {
-            newsDao.updateNewsItem(newsEntity);
+            newsDao.setNewsItemRead(entity.getShareUrl(), true);
         }).subscribeOn(dbScheduler)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
+    }
+
+    public LiveData<GalleryEntity> getGalleryItem(int id) {
+        return newsDao.getGallery(id);
     }
 }

@@ -6,5 +6,7 @@ package hakob.task.task;
  */
 public class Constants {
 
-    public static String detailKey = "url";
+    public final static String detailKey = "url";
+    public static boolean isTablet = false;
+    public static String imageKey = "imageId";
 }

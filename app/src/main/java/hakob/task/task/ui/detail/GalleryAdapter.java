@@ -27,9 +27,11 @@ public class GalleryAdapter extends ListAdapter<GalleryEntity, ImageViewHolder> 
             return oldItem.equals(newItem);
         }
     };
+    private final ListItemClickListener listItemClickListener;
 
-    public GalleryAdapter() {
+    public GalleryAdapter(ListItemClickListener listItemClickListener) {
         super(diffCallback);
+        this.listItemClickListener = listItemClickListener;
     }
 
     @NonNull
@@ -39,7 +41,7 @@ public class GalleryAdapter extends ListAdapter<GalleryEntity, ImageViewHolder> 
                 ItemGalleryBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         ImageViewHolder imageViewHolder = new ImageViewHolder(binding);
         imageViewHolder.itemView.setOnClickListener(v -> {
-
+            listItemClickListener.onItemClicked(getItem(imageViewHolder.getAdapterPosition()));
         });
         return imageViewHolder;
     }
@@ -47,6 +49,10 @@ public class GalleryAdapter extends ListAdapter<GalleryEntity, ImageViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         holder.bind(getItem(position));
+    }
+
+    interface ListItemClickListener {
+        void onItemClicked(GalleryEntity galleryEntity);
     }
 }
 
